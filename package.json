@@ -1,6 +1,6 @@
 {
   "name": "avadown",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "O AVA IFES caiu?",
   "main": "index.js",
   "scripts": {
