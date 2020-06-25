@@ -1,0 +1,17 @@
+{
+  "name": "avadown",
+  "version": "0.0.1",
+  "description": "O AVA IFES caiu?",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "nedb": "^1.8.0",
+    "twit": "^2.2.11"
+  }
+}
