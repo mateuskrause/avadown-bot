@@ -1,18 +1,31 @@
-// const Datastore = require('nedb');
+const Datastore = require('nedb');
 const Twit = require('twit');
 const request = require('request');
 
 require('dotenv').config();
 
-// const database = new Datastore('database/data.db');
-// database.loadDatabase();
+const database = new Datastore('database.db');
+database.loadDatabase();
 
 function verify() {
     let url = "http://ava.cefor.ifes.edu.br/";
 
     request(url, (error, res) => {
-        if (error) console.log("error: " + error);
-        console.log("res: " + JSON.stringify(res));
+        let status;
+
+        if (error) {
+            console.log("error: " + error);
+            status = error;
+        } else {
+            console.log("res: " + res.statusCode);
+            status = res.statusCode;
+        }
+
+        //salvar no bd ultima ação
+        database.insert({
+            status: status,
+            date: getCurrentDate()
+        });
     });
 }
 
@@ -40,5 +53,11 @@ function tweetStatus(message) {
     }
 }
 
-verify();
-// setInterval(verify(), 5*1000);
+function getCurrentDate() {
+    var date = new Date();
+    return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+}
+
+
+//onde a mágica acontece
+setInterval(() => verify(), 5 * 60 * 1000); //executa a cada 5 minutos
