@@ -9,6 +9,10 @@ const last = new Datastore('last.db');
 log.loadDatabase();
 last.loadDatabase();
 
+//
+setInterval(() => verify(), 5 * 60 * 1000); //executa a cada 5 minutos
+//
+
 function verify() {
     let url = "http://ava.cefor.ifes.edu.br/";
 
@@ -90,23 +94,3 @@ function getCurrentDate() {
     var date = new Date();
     return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
 }
-
-//
-
-// let promise1 = new Promise(resolve => {
-//     setTimeout(resolve, 1000, 'one');
-// });
-// let promise2 = new Promise(resolve => {
-//     setTimeout(resolve, 800, 'two');
-// });
-
-// async function fetchAndLogResult() {
-//     let result = await Promise.race([promise1, promise2]);
-//     console.log(result);
-// }
-
-// fetchAndLogResult();
-
-
-//onde a mágica acontece
-setInterval(() => verify(), 5 * 60 * 1000); //executa a cada 5 minutos
