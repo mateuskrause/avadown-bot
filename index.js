@@ -4,8 +4,10 @@ const request = require('request');
 
 require('dotenv').config();
 
-const database = new Datastore('database.db');
-database.loadDatabase();
+const log = new Datastore('log.db');
+const last = new Datastore('last.db');
+log.loadDatabase();
+last.loadDatabase();
 
 function verify() {
     let url = "http://ava.cefor.ifes.edu.br/";
@@ -19,13 +21,44 @@ function verify() {
         } else {
             console.log("res: " + res.statusCode);
             status = res.statusCode;
+
+            last.find({}, (err, docs) => {
+                if (docs.length < 1) {
+
+                    last.insert({ last: status });
+
+                    if (status == 200) {
+                        tweetStatus("Ainda não");
+                        insertLog();
+                    } else {
+                        tweetStatus("Sim (Erro " + status + ")");
+                        insertLog();
+                    }
+
+                } else {
+
+                    if(docs[0].last != status){
+                        last.update({}, { last: status }, {});
+                    }
+
+                    if (status == 200 && docs[0].last != 200) {
+                        tweetStatus("Voltou");
+                        insertLog();
+                    } else if (status != 200 && docs[0].last == 200) {
+                        tweetStatus("Sim (Erro " + status + ")");
+                        insertLog();
+                    }
+                }
+            });
         }
 
-        //salvar no bd ultima ação
-        database.insert({
-            status: status,
-            date: getCurrentDate()
-        });
+        function insertLog() {
+            log.insert({
+                status: status,
+                date: getCurrentDate()
+            });
+        }
+
     });
 }
 
@@ -35,7 +68,7 @@ function tweetStatus(message) {
         consumer_secret: process.env.CONSUMER_SECRET,
         access_token: process.env.ACCESS_TOKEN,
         access_token_secret: process.env.ACCESS_TOKEN_SECRET,
-        timeout_ms: 60 * 1000
+        timeout_ms: 60 * 1000 //timeoout de segurança acho eu
     });
 
     let tweet = {
@@ -57,6 +90,22 @@ function getCurrentDate() {
     var date = new Date();
     return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
 }
+
+//
+
+// let promise1 = new Promise(resolve => {
+//     setTimeout(resolve, 1000, 'one');
+// });
+// let promise2 = new Promise(resolve => {
+//     setTimeout(resolve, 800, 'two');
+// });
+
+// async function fetchAndLogResult() {
+//     let result = await Promise.race([promise1, promise2]);
+//     console.log(result);
+// }
+
+// fetchAndLogResult();
 
 
 //onde a mágica acontece
