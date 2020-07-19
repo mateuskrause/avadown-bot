@@ -9,19 +9,31 @@ const last = new Datastore('last.db');
 log.loadDatabase();
 last.loadDatabase();
 
-//
-setInterval(() => verify(), 5 * 60 * 1000); //executa a cada 5 minutos
-//
+console.log("bot rodando");
 
 function verify() {
     let url = "http://ava.cefor.ifes.edu.br/";
 
     request(url, (error, res) => {
         let status;
+	let time = getCurrentHour();
 
         if (error) {
             console.log("error: " + error);
-            status = error;
+            /* status = error;
+	    
+            last.find({}, (err, docs) => {
+		if(docs.length < 1) {
+			last.insert({ last: status });
+			tweetStatus("Sim (" + time + ")");
+			insertLog();
+		} else {
+			last.update({}, { last: status }, {});
+			tweetStatus("Sim (" + time + ")");
+			insertLog();
+		}
+   	    }); */
+
         } else {
             console.log("res: " + res.statusCode);
             status = res.statusCode;
@@ -35,7 +47,7 @@ function verify() {
                         tweetStatus("Ainda não");
                         insertLog();
                     } else {
-                        tweetStatus("Sim (Erro " + status + ")");
+                        tweetStatus("Sim (" + time + ")");
                         insertLog();
                     }
 
@@ -46,15 +58,15 @@ function verify() {
                     }
 
                     if (status == 200 && docs[0].last != 200) {
-                        tweetStatus("Voltou");
+                        tweetStatus("Voltou (" + time + ")");
                         insertLog();
                     } else if (status != 200 && docs[0].last == 200) {
-                        tweetStatus("Sim (Erro " + status + ")");
+                        tweetStatus("Sim (" + time + ")");
                         insertLog();
                     }
                 }
             });
-        }
+        }  
 
         function insertLog() {
             log.insert({
@@ -79,7 +91,7 @@ function tweetStatus(message) {
         status: message
     }
 
-    bot.post('statuses/update', tweet, tweeted);
+   bot.post('statuses/update', tweet, tweeted);
 
     function tweeted(error, data, response) {
         if (error) {
@@ -94,3 +106,28 @@ function getCurrentDate() {
     var date = new Date();
     return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
 }
+
+function getCurrentHour() {
+    var date = new Date();
+    return date.getHours() + ":" + date.getMinutes();
+}
+
+//
+
+// let promise1 = new Promise(resolve => {
+//     setTimeout(resolve, 1000, 'one');
+// });
+// let promise2 = new Promise(resolve => {
+//     setTimeout(resolve, 800, 'two');
+// });
+
+// async function fetchAndLogResult() {
+//     let result = await Promise.race([promise1, promise2]);
+//     console.log(result);
+// }
+
+// fetchAndLogResult();
+
+
+//onde a mágica acontece
+setInterval(() => verify(), 60 * 1000); //executa a cada 5 minutos

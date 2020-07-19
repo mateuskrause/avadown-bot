@@ -1,16 +1,25 @@
 {
   "name": "avadown",
-  "version": "1.0.0",
+  "version": "1.0.4",
   "description": "O AVA IFES caiu?",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "mateuskrause, arthurpbelato",
   "license": "ISC",
   "dependencies": {
     "dotenv": "^8.2.0",
     "nedb": "^1.8.0",
     "twit": "^2.2.11"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mateuskrause/avadown-bot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mateuskrause/avadown-bot/issues"
+  },
+  "homepage": "https://github.com/mateuskrause/avadown-bot#readme"
 }
