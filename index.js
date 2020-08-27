@@ -16,7 +16,7 @@ function verify() {
 
     request(url, (error, res) => {
         let status;
-	      let time = getCurrentHour();
+        let time = getCurrentHour();
 
         if (error) {
             console.log(getCurrentDate() + " - error: " + error);
@@ -40,7 +40,7 @@ function verify() {
 
                 } else {
 
-                    if(docs[0].last != status){
+                    if (docs[0].last != status) {
                         last.update({}, { last: status }, {});
                     }
 
@@ -52,15 +52,18 @@ function verify() {
                         insertLog();
                     }
                 }
-            });
-        }  
+                
+                function insertLog() {
+                    log.insert({
+                        status: status,
+                        date: getCurrentDate()
+                    });
+                }
 
-        function insertLog() {
-            log.insert({
-                status: status,
-                date: getCurrentDate()
             });
         }
+
+
 
     });
 }
@@ -78,7 +81,7 @@ function tweetStatus(message) {
         status: message
     }
 
-   bot.post('statuses/update', tweet, tweeted);
+    bot.post('statuses/update', tweet, tweeted);
 
     function tweeted(error, data, response) {
         if (error) {
@@ -100,4 +103,4 @@ function getCurrentHour() {
 }
 
 //onde a mágica acontece
-setInterval(() => verify(), 60 * 1000); //executa a cada 5 minutos
+setInterval(() => verify(), 60 * 1000); //executa a cada 1 minuto
