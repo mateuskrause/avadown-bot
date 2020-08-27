@@ -16,26 +16,13 @@ function verify() {
 
     request(url, (error, res) => {
         let status;
-	let time = getCurrentHour();
+	      let time = getCurrentHour();
 
         if (error) {
-            console.log("error: " + error);
-            /* status = error;
-	    
-            last.find({}, (err, docs) => {
-		if(docs.length < 1) {
-			last.insert({ last: status });
-			tweetStatus("Sim (" + time + ")");
-			insertLog();
-		} else {
-			last.update({}, { last: status }, {});
-			tweetStatus("Sim (" + time + ")");
-			insertLog();
-		}
-   	    }); */
+            console.log(getCurrentDate() + " - error: " + error);
 
         } else {
-            console.log("res: " + res.statusCode);
+            console.log(getCurrentDate() + " - res: " + res.statusCode);
             status = res.statusCode;
 
             last.find({}, (err, docs) => {
@@ -111,23 +98,6 @@ function getCurrentHour() {
     var date = new Date();
     return date.getHours() + ":" + date.getMinutes();
 }
-
-//
-
-// let promise1 = new Promise(resolve => {
-//     setTimeout(resolve, 1000, 'one');
-// });
-// let promise2 = new Promise(resolve => {
-//     setTimeout(resolve, 800, 'two');
-// });
-
-// async function fetchAndLogResult() {
-//     let result = await Promise.race([promise1, promise2]);
-//     console.log(result);
-// }
-
-// fetchAndLogResult();
-
 
 //onde a mágica acontece
 setInterval(() => verify(), 60 * 1000); //executa a cada 5 minutos
