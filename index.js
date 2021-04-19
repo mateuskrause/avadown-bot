@@ -4,15 +4,15 @@ const request = require('request');
 
 require('dotenv').config();
 
-const log = new Datastore('log.db');
 const last = new Datastore('last.db');
-log.loadDatabase();
+
 last.loadDatabase();
+
+const url = "http://ava.cefor.ifes.edu.br/";
 
 console.log("bot rodando");
 
 function verify() {
-    let url = "http://ava.cefor.ifes.edu.br/";
 
     request(url, (error, res) => {
         let status;
@@ -32,10 +32,8 @@ function verify() {
 
                     if (status == 200) {
                         tweetStatus("Ainda não");
-                        insertLog();
                     } else {
                         tweetStatus("Sim (" + time + ")");
-                        insertLog();
                     }
 
                 } else {
@@ -46,24 +44,14 @@ function verify() {
 
                     if (status == 200 && docs[0].last != 200) {
                         tweetStatus("Voltou (" + time + ")");
-                        insertLog();
                     } else if (status != 200 && docs[0].last == 200) {
                         tweetStatus("Sim (" + time + ")");
-                        insertLog();
                     }
                 }
                 
-                function insertLog() {
-                    log.insert({
-                        status: status,
-                        date: getCurrentDate()
-                    });
-                }
 
             });
         }
-
-
 
     });
 }
@@ -74,7 +62,7 @@ function tweetStatus(message) {
         consumer_secret: process.env.CONSUMER_SECRET,
         access_token: process.env.ACCESS_TOKEN,
         access_token_secret: process.env.ACCESS_TOKEN_SECRET,
-        timeout_ms: 60 * 1000 //timeoout de segurança acho eu
+        timeout_ms: 30 * 1000
     });
 
     let tweet = {
@@ -103,4 +91,5 @@ function getCurrentHour() {
 }
 
 //onde a mágica acontece
-setInterval(() => verify(), 60 * 1000); //executa a cada 1 minuto
+setInterval(() => verify(), 10 * 1000); //executa a cada 1 minuto
+
