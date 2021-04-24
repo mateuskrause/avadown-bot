@@ -87,7 +87,13 @@ function getCurrentDate() {
 
 function getCurrentHour() {
     var date = new Date();
-    return date.getHours() + ":" + date.getMinutes();
+    return padLeadingZeros(date.getHours(), 2) + ":" + padLeadingZeros(date.getMinutes(), 2);
+}
+
+function padLeadingZeros(num, size) {
+    var s = num+"";
+    while (s.length < size) s = "0" + s;
+    return s;
 }
 
 //onde a mágica acontece
