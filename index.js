@@ -97,5 +97,5 @@ function padLeadingZeros(num, size) {
 }
 
 //onde a mágica acontece
-setInterval(() => verify(), 10 * 1000); //executa a cada 1 minuto
+setInterval(() => verify(), 60 * 1000); //executa a cada 1 minuto
 
